@@ -3,492 +3,860 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Colin'S</title>
-    <meta name="description" content="Organisez votre vie avec Colin'S">
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="icon-192.png">
-    <meta name="theme-color" content="#4CAF50">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Application Utile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            background-color: #f3f4f6; /* Couleur de fond Tailwind */
-            color: #1f2937; /* Couleur de texte Tailwind */
         }
-        /* Style de la barre de navigation */
-        .bottom-nav {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            background-color: #ffffff; /* Couleur de fond Tailwind */
-            padding: 0.75rem 0; /* padding Tailwind */
-            border-top: 1px solid #e5e7eb; /* border-top Tailwind */
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            z-index: 10;
-        }
-        .nav-icon {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            cursor: pointer;
-            color: #6b7280; /* Couleur de texte Tailwind */
-        }
-        .nav-icon.active {
-            color: #4CAF50; /* Couleur de texte Tailwind */
-        }
-        .nav-icon i {
-            font-size: 1.5rem; /* Taille de l'icône */
-            margin-bottom: 0.25rem; /* margin-bottom Tailwind */
-        }
-        .nav-icon span {
-            font-size: 0.75rem; /* Taille de la police Tailwind */
-        }
-        /* Style du contenu principal */
-        .main-content {
-            flex: 1;
-            padding: 1rem; /* padding Tailwind */
-            padding-bottom: 4rem; /* Pour éviter le chevauchement avec la barre de navigation */
-        }
-        .section {
-            display: none;
-        }
-        .section.active {
-            display: block;
-        }
-        /* Styles spécifiques aux sections */
-        #budget {
-            padding: 1.5rem;
-            background-color: #ffffff;
-            border-radius: 0.5rem;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
-            margin-bottom: 1rem;
-        }
-        #budget h2 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: #1f2937;
-        }
-        #budget p {
-            font-size: 1rem;
-            color: #4b5563;
-            margin-bottom: 0.75rem;
-        }
-        #todo {
-            padding: 1.5rem;
-            background-color: #ffffff;
-            border-radius: 0.5rem;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
-        }
-        #todo h2 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: #1f2937;
-        }
-        #todo ul {
-            list-style-type: disc;
-            padding-left: 1rem;
-            margin-bottom: 1rem;
-        }
-        #todo li {
-            font-size: 1rem;
-            color: #4b5563;
-            margin-bottom: 0.5rem;
-        }
-        /* Style pour le bouton d'ajout de tâche */
-        #add-todo-button {
-            display: block;
-            margin-top: 1rem;
-            padding: 0.75rem 1.5rem;
-            background-color: #4CAF50;
-            color: white;
-            font-size: 1rem;
-            border: none;
-            border-radius: 0.375rem;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            width: 100%;
-            text-align: center;
-        }
-        #add-todo-button:hover {
-            background-color: #45a049;
-        }
-        /* Style pour la boîte de dialogue modale */
         .modal {
             display: none;
             position: fixed;
-            z-index: 20;
+            z-index: 10;
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
             overflow: auto;
-            background-color: rgba(0,0,0,0.5);
-            justify-content: center;
-            align-items: center;
+            background-color: rgba(0,0,0,0.4);
         }
         .modal-content {
-            background-color: #ffffff;
-            padding: 1.5rem;
-            border-radius: 0.5rem;
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
             width: 90%;
-            max-width: 400px;
+            max-width: 500px;
+            border-radius: 0.5rem;
             position: relative;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-        }
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-            padding-bottom: 0.75rem;
-            border-bottom: 1px solid #e5e7eb;
-        }
-        .modal-header h2 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #1f2937;
         }
         .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
             position: absolute;
-            top: 1rem;
-            right: 1rem;
-            font-size: 1.25rem;
+            top: 10px;
+            right: 15px;
             cursor: pointer;
-            color: #6b7280;
-            border: none;
-            background-color: transparent;
         }
-        .close-button:hover {
-            color: #374151;
+        .close-button:hover,
+        .close-button:focus {
+            color: #000;
+            text-decoration: none;
         }
-        .modal-body {
-            margin-bottom: 1rem;
-        }
-        .modal-body label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-size: 0.875rem;
-            color: #374151;
-            font-weight: 500;
-        }
-        .modal-body input {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #d1d5db;
-            border-radius: 0.375rem;
-            font-size: 1rem;
-            margin-bottom: 1rem;
-            box-sizing: border-box;
-        }
-        .modal-body input:focus {
-            outline: none;
-            border-color: #4CAF50;
-            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.15);
-        }
-        .modal-footer {
-            display: flex;
-            justify-content: flex-end;
-        }
-        .modal-footer button {
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.375rem;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            border: none;
-            color: white;
-            background-color: #4CAF50;
-        }
-        .modal-footer button:hover {
-            background-color: #45a049;
-        }
-        .modal-footer button:disabled {
-            background-color: #a0a0a0;
-            cursor: not-allowed;
-        }
-        /* Style pour le message de bienvenue */
-        #welcome-message {
-            text-align: center;
-            padding: 2rem;
-            background-color: #ffffff;
+        .feature-page {
+            display: none;
+            padding: 20px;
             border-radius: 0.5rem;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
-            margin-bottom: 1rem;
+            background-color: #ffffff;
+            margin-top: 2rem;
         }
-        #welcome-message h1 {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #1f2937;
-            margin-bottom: 0.75rem;
-        }
-        #welcome-message p {
-            font-size: 1rem;
-            color: #4b5563;
-        }
-        /* Styles pour les inputs du budget */
-        #income-input, #expenses-input {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #d1d5db;
-            border-radius: 0.375rem;
-            font-size: 1rem;
-            margin-bottom: 1rem;
-            box-sizing: border-box;
-        }
-        #income-input:focus, #expenses-input:focus {
-            outline: none;
-            border-color: #4CAF50;
-            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.15);
-        }
-        .budget-controls {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            margin-bottom: 1rem;
-        }
-        .budget-controls label {
-            margin-bottom: 0.25rem;
-            font-weight: 500;
-            color: #374151;
-        }
-        .budget-controls button {
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.375rem;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            border: none;
-            color: white;
-            background-color: #4CAF50;
-            margin-top: 0.5rem;
-        }
-        .budget-controls button:hover {
-            background-color: #45a049;
+        .feature-page.active {
+            display: block;
         }
     </style>
 </head>
-<body>
-    <div id="welcome-message">
-        <h1>Bienvenue sur Colin'S</h1>
-        <p>Votre assistant personnel pour organiser votre vie.</p>
-    </div>
-
-    <div class="main-content">
-        <section id="budget" class="section">
-            <h2>Aperçu du budget</h2>
-            <div class="budget-controls">
-                <label for="income-input">Revenus du mois :</label>
-                <input type="number" id="income-input" placeholder="Entrez vos revenus" value="2000">
-                <label for="expenses-input">Dépenses du mois :</label>
-                <input type="number" id="expenses-input" placeholder="Entrez vos dépenses" value="1500">
-                <button id="update-budget-button">Mettre à jour le budget</button>
+<body class="bg-gray-100 p-4">
+    <h1 class="text-3xl font-semibold text-blue-600 text-center mb-8">Application Utile pour la Vie Quotidienne</h1>
+    <div class="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <section class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Outils de Productivité</h2>
+            <div class="space-y-4">
+                <div class="bg-gray-50 rounded-md p-4 flex items-center justify-between">
+                    <span>Calculatrice Simple</span>
+                    <button id="calculator-btn" data-target="calculator-page" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Ouvrir</button>
+                </div>
+                <div class="bg-gray-50 rounded-md p-4 flex items-center justify-between">
+                    <span>Liste de Tâches</span>
+                    <button id="todo-btn" data-target="todo-page" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Ouvrir</button>
+                </div>
+                <div class="bg-gray-50 rounded-md p-4 flex items-center justify-between">
+                    <span>Chronomètre</span>
+                    <button id="timer-btn" data-target="timer-page" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Ouvrir</button>
+                </div>
+                <div class="bg-gray-50 rounded-md p-4 flex items-center justify-between">
+                    <span>Convertisseur d'Unités</span>
+                    <button id="unit-converter-btn" data-target="unit-converter-page" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Ouvrir</button>
+                </div>
             </div>
-            <p>Revenus du mois : <span id="monthly-income">0 €</span></p>
-            <p>Dépenses du mois : <span id="monthly-expenses">0 €</span></p>
-            <p>Argent restant : <span id="remaining-budget">0 €</span></p>
         </section>
-        <section id="todo" class="section">
-            <h2>Liste de choses à faire</h2>
-            <ul id="todo-list">
-                <li>Faire les courses</li>
-                <li>Payer les factures</li>
-            </ul>
-            <button id="add-todo-button">Ajouter une tâche</button>
+
+        <section class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Organisation et Gestion</h2>
+            <div class="space-y-4">
+                <div class="bg-gray-50 rounded-md p-4 flex items-center justify-between">
+                    <span>Calendrier</span>
+                    <button id="calendar-btn" data-target="calendar-page" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Ouvrir</button>
+                </div>
+                <div class="bg-gray-50 rounded-md p-4 flex items-center justify-between">
+                    <span>Gestionnaire de Contacts</span>
+                    <button id="contact-manager-btn" data-target="contact-manager-page" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Ouvrir</button>
+                </div>
+                <div class="bg-gray-50 rounded-md p-4 flex items-center justify-between">
+                    <span>Bloc-notes</span>
+                    <button id="notepad-btn" data-target="notepad-page" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Ouvrir</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Santé et Bien-être</h2>
+            <div class="space-y-4">
+                <div class="bg-gray-50 rounded-md p-4 flex items-center justify-between">
+                    <span>Suivi de l'Hydratation</span>
+                    <button id="hydration-tracker-btn" data-target="hydration-tracker-page" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Ouvrir</button>
+                </div>
+                <div class="bg-gray-50 rounded-md p-4 flex items-center justify-between">
+                    <span>Calculateur d'IMC</span>
+                    <button id="bmi-calculator-btn" data-target="bmi-calculator-page" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Ouvrir</button>
+                </div>
+                <div class="bg-gray-50 rounded-md p-4 flex items-center justify-between">
+                    <span>Minuteur de Pomodoro</span>
+                    <button id="pomodoro-timer-btn" data-target="pomodoro-timer-page" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Ouvrir</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Divertissement et Loisirs</h2>
+            <div class="space-y-4">
+                <div class="bg-gray-50 rounded-md p-4 flex items-center justify-between">
+                    <span>Jeu de Devinettes</span>
+                    <button id="guessing-game-btn" data-target="guessing-game-page" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Ouvrir</button>
+                </div>
+                <div class="bg-gray-50 rounded-md p-4 flex items-center justify-between">
+                    <span>Générateur de Citations</span>
+                    <button id="quote-generator-btn" data-target="quote-generator-page" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Ouvrir</button>
+                </div>
+                <div class="bg-gray-50 rounded-md p-4 flex items-center justify-between">
+                    <span>Lecteur de Musique</span>
+                    <button id="music-player-btn" data-target="music-player-page" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Ouvrir</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Outils Pratiques</h2>
+            <div class="space-y-4">
+                <div class="bg-gray-50 rounded-md p-4 flex items-center justify-between">
+                    <span>Météo</span>
+                    <button id="weather-btn" data-target="weather-page" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Ouvrir</button>
+                </div>
+                <div class="bg-gray-50 rounded-md p-4 flex items-center justify-between">
+                    <span>Traducteur</span>
+                    <button id="translator-btn" data-target="translator-page" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Ouvrir</button>
+                </div>
+                <div class="bg-gray-50 rounded-md p-4 flex items-center justify-between">
+                    <span>Scanner de QR Code</span>
+                    <button id="qr-scanner-btn" data-target="qr-scanner-page" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Ouvrir</button>
+                </div>
+                <div class="bg-gray-50 rounded-md p-4 flex items-center justify-between">
+                    <span>Localisateur de Fuseaux Horaires</span>
+                    <button id="timezone-locator-btn" data-target="timezone-locator-page" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Ouvrir</button>
+                </div>
+            </div>
         </section>
     </div>
 
-    <nav class="bottom-nav">
-        <div class="nav-icon active" data-section="budget">
-            <i class="fas fa-wallet"></i>
-            <span>Budget</span>
-        </div>
-        <div class="nav-icon" data-section="todo">
-            <i class="fas fa-list-ul"></i>
-            <span>To-Do</span>
-        </div>
-    </nav>
-
-    <div id="add-todo-modal" class="modal">
+    <div id="modal" class="modal">
         <div class="modal-content">
-            <div class="modal-header">
-                <h2>Ajouter une tâche</h2>
-                <button class="close-button" id="close-modal-button">&times;</button>
+            <span class="close-button">&times;</span>
+            <div id="calculator-page" class="feature-page">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Calculatrice Simple</h2>
+                <input type="text" id="calc-display" class="w-full p-2 mb-4 border rounded-md text-right" placeholder="0">
+                <div class="grid grid-cols-4 gap-2">
+                    <button onclick="calculate('7')" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded">7</button>
+                    <button onclick="calculate('8')" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded">8</button>
+                    <button onclick="calculate('9')" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded">9</button>
+                    <button onclick="calculate('/')" class="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded">÷</button>
+                    <button onclick="calculate('4')" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded">4</button>
+                    <button onclick="calculate('5')" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded">5</button>
+                    <button onclick="calculate('6')" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded">6</button>
+                    <button onclick="calculate('*')" class="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded">×</button>
+                    <button onclick="calculate('1')" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded">1</button>
+                    <button onclick="calculate('2')" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded">2</button>
+                    <button onclick="calculate('3')" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded">3</button>
+                    <button onclick="calculate('-')" class="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded">-</button>
+                    <button onclick="calculate('0')" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded col-span-2">0</button>
+                    <button onclick="calculate('.')" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded">.</button>
+                    <button onclick="calculate('+')" class="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded">+</button>
+                    <button onclick="clearDisplay()" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded col-span-2">C</button>
+                    <button onclick="calculate('=')" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded col-span-2">=</button>
+                </div>
             </div>
-            <div class="modal-body">
-                <label for="todo-input">Tâche :</label>
-                <input type="text" id="todo-input" placeholder="Entrez votre tâche">
+
+            <div id="todo-page" class="feature-page">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Liste de Tâches</h2>
+                <input type="text" id="todo-input" class="w-full p-2 mb-4 border rounded-md" placeholder="Ajouter une tâche...">
+                <ul id="todo-list" class="space-y-2">
+                </ul>
+                <button onclick="addTodo()" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Ajouter</button>
             </div>
-            <div class="modal-footer">
-                <button id="save-todo-button" disabled>Enregistrer</button>
+
+            <div id="timer-page" class="feature-page">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Chronomètre</h2>
+                <div class="text-4xl font-bold text-center mb-4" id="timer-display">00:00:00</div>
+                <div class="flex justify-center space-x-4">
+                    <button id="start-timer" onclick="startTimer()" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Démarrer</button>
+                    <button id="pause-timer" onclick="pauseTimer()" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded">Pause</button>
+                    <button id="reset-timer" onclick="resetTimer()" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Réinitialiser</button>
+                </div>
+            </div>
+
+            <div id="unit-converter-page" class="feature-page">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Convertisseur d'Unités</h2>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="from-unit" class="block text-gray-700 text-sm font-bold mb-2">De:</label>
+                        <select id="from-unit" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                            <option value="celsius">Celsius</option>
+                            <option value="fahrenheit">Fahrenheit</option>
+                            <option value="meters">Mètres</option>
+                            <option value="feet">Pieds</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="to-unit" class="block text-gray-700 text-sm font-bold mb-2">À:</label>
+                        <select id="to-unit" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                            <option value="fahrenheit">Fahrenheit</option>
+                            <option value="celsius">Celsius</option>
+                            <option value="feet">Pieds</option>
+                            <option value="meters">Mètres</option>
+                        </select>
+                    </div>
+                </div>
+                <input type="number" id="unit-input" class="w-full p-2 mt-4 mb-4 border rounded-md" placeholder="Entrer la valeur">
+                <p id="unit-output" class="text-xl font-semibold text-gray-800">Résultat:</p>
+                <button onclick="convertUnits()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Convertir</button>
+            </div>
+
+            <div id="calendar-page" class="feature-page">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Calendrier</h2>
+                <div id="calendar" class="mb-4"></div>
+            </div>
+
+            <div id="contact-manager-page" class="feature-page">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Gestionnaire de Contacts</h2>
+                <input type="text" id="contact-name-input" class="w-full p-2 mb-2 border rounded-md" placeholder="Nom">
+                <input type="text" id="contact-phone-input" class="w-full p-2 mb-2 border rounded-md" placeholder="Téléphone">
+                <input type="text" id="contact-email-input" class="w-full p-2 mb-4 border rounded-md" placeholder="Email">
+                <ul id="contact-list" class="space-y-2">
+                </ul>
+                <button onclick="addContact()" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Ajouter Contact</button>
+            </div>
+
+            <div id="notepad-page" class="feature-page">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Bloc-notes</h2>
+                <textarea id="note-input" class="w-full h-48 p-2 border rounded-md" placeholder="Écrivez votre note ici..."></textarea>
+                <button onclick="saveNote()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Sauvegarder la Note</button>
+                <p id="note-saved-message" class="mt-2 text-green-600"></p>
+            </div>
+
+            <div id="hydration-tracker-page" class="feature-page">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Suivi de l'Hydratation</h2>
+                <div class="flex items-center space-x-4 mb-4">
+                    <input type="number" id="water-amount" class="w-32 p-2 border rounded-md" placeholder="Quantité (ml)" value="250">
+                    <button onclick="addWater()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Ajouter</button>
+                </div>
+                <div class="bg-gray-200 rounded-full h-4 mb-2">
+                    <div id="hydration-level" class="bg-blue-500 rounded-full h-4" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="3000"></div>
+                </div>
+                <p id="hydration-text" class="text-sm text-gray-600">0ml sur 3000ml</p>
+                <button onclick="resetHydration()" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4">Réinitialiser</button>
+            </div>
+
+            <div id="bmi-calculator-page" class="feature-page">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Calculateur d'IMC</h2>
+                <input type="number" id="height-input" class="w-full p-2 mb-2 border rounded-md" placeholder="Taille (cm)">
+                <input type="number" id="weight-input" class="w-full p-2 mb-4 border rounded-md" placeholder="Poids (kg)">
+                <p id="bmi-result" class="text-xl font-semibold text-gray-800">IMC: </p>
+                <p id="bmi-category" class="text-gray-600"></p>
+                <button onclick="calculateBMI()" class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded mt-4">Calculer</button>
+            </div>
+
+            <div id="pomodoro-timer-page" class="feature-page">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Minuteur de Pomodoro</h2>
+                <div class="text-4xl font-bold text-center mb-4" id="pomodoro-display">25:00</div>
+                <div class="flex justify-center space-x-4">
+                    <button id="start-pomodoro" onclick="startPomodoro()" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Démarrer</button>
+                    <button id="pause-pomodoro" onclick="pausePomodoro()" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded">Pause</button>
+                    <button id="reset-pomodoro" onclick="resetPomodoro()" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Réinitialiser</button>
+                </div>
+                <p id="pomodoro-message" class="text-center mt-2 text-gray-700"></p>
+            </div>
+
+            <div id="guessing-game-page" class="feature-page">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Jeu de Devinettes</h2>
+                <p class="text-gray-700 mb-4">Devinez le nombre entre 1 et 100:</p>
+                <input type="number" id="guess-input" class="w-full p-2 mb-4 border rounded-md" placeholder="Entrer votre猜测">
+                <p id="guess-message" class="text-gray-600 mb-4"></p>
+                <button onclick="checkGuess()" class="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">Deviner</button>
+            </div>
+
+            <div id="quote-generator-page" class="feature-page">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Générateur de Citations</h2>
+                <div id="quote-text" class="text-xl italic text-gray-700 mb-4 text-center"></div>
+                <p id="quote-author" class="text-md font-semibold text-gray-800 text-center mb-4"></p>
+                <button onclick="generateQuote()" class="bg-pink-500 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded">Générer une Citation</button>
+            </div>
+
+            <div id="music-player-page" class="feature-page">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Lecteur de Musique</h2>
+                <input type="file" id="audio-file" accept="audio/*" class="mb-4">
+                <audio id="music-player" controls class="w-full mb-4"></audio>
+                <div class="flex justify-center space-x-4">
+                    <button onclick="playMusic()" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Play</button>
+                    <button onclick="pauseMusic()" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded">Pause</button>
+                    <button onclick="stopMusic()" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Stop</button>
+                </div>
+            </div>
+
+            <div id="weather-page" class="feature-page">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Météo</h2>
+                <input type="text" id="weather-location" class="w-full p-2 mb-4 border rounded-md" placeholder="Entrer la ville">
+                <div id="weather-info" class="text-gray-700"></div>
+                <button onclick="getWeather()" class="bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded mt-4">Obtenir la Météo</button>
+            </div>
+
+            <div id="translator-page" class="feature-page">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Traducteur</h2>
+                <textarea id="source-text" class="w-full h-32 p-2 mb-4 border rounded-md" placeholder="Entrer le texte à traduire"></textarea>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label for="source-language" class="block text-gray-700 text-sm font-bold mb-2">De:</label>
+                        <select id="source-language" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                            <option value="en">Anglais</option>
+                            <option value="fr">Français</option>
+                            <option value="es">Espagnol</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="target-language" class="block text-gray-700 text-sm font-bold mb-2">À:</label>
+                        <select id="target-language" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                            <option value="fr">Français</option>
+                            <option value="en">Anglais</option>
+                            <option value="es">Espagnol</option>
+                        </select>
+                    </div>
+                </div>
+                <p id="translated-text" class="text-xl italic text-gray-700 mb-4"></p>
+                <button onclick="translateText()" class="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">Traduire</button>
+            </div>
+
+            <div id="qr-scanner-page" class="feature-page">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Scanner de QR Code</h2>
+                <input type="file" id="qr-image-file" accept="image/*" class="mb-4">
+                <div id="qr-code-result" class="text-gray-700"></div>
+                <button onclick="scanQRCode()" class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded mt-4">Scanner le QR Code</button>
+            </div>
+
+            <div id="timezone-locator-page" class="feature-page">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Localisateur de Fuseaux Horaires</h2>
+                <input type="text" id="timezone-location" class="w-full p-2 mb-4 border rounded-md" placeholder="Entrer la ville ou le pays">
+                <div id="timezone-info" class="text-gray-700"></div>
+                <button onclick="getTimezone()" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded mt-4">Obtenir le Fuseau Horaire</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Sélection des éléments du DOM
-        const navIcons = document.querySelectorAll('.nav-icon');
-        const sections = document.querySelectorAll('.section');
-        const addTodoButton = document.getElementById('add-todo-button');
-        const addTodoModal = document.getElementById('add-todo-modal');
-        const closeModalButton = document.getElementById('close-modal-button');
-        const saveTodoButton = document.getElementById('save-todo-button');
-        const todoInput = document.getElementById('todo-input');
-        const todoList = document.getElementById('todo-list');
-        const monthlyIncomeDisplay = document.getElementById('monthly-income');
-        const monthlyExpensesDisplay = document.getElementById('monthly-expenses');
-        const remainingBudgetDisplay = document.getElementById('remaining-budget');
-        const welcomeMessage = document.getElementById('welcome-message');
-        const incomeInput = document.getElementById('income-input');
-        const expensesInput = document.getElementById('expenses-input');
-        const updateBudgetButton = document.getElementById('update-budget-button');
+        const modal = document.getElementById("modal");
+        const modalClose = document.querySelector(".close-button");
+        const featurePages = document.querySelectorAll(".feature-page");
+        const buttons = document.querySelectorAll("[data-target]");
 
-        // Données du budget (simulées)
-        let monthlyIncome = 2000;
-        let monthlyExpenses = 1500;
-        let remainingBudget = monthlyIncome - monthlyExpenses;
-
-        // Mise à jour de l'affichage du budget
-        function updateBudgetDisplay() {
-            monthlyIncomeDisplay.textContent = monthlyIncome.toFixed(2) + ' €';
-            monthlyExpensesDisplay.textContent = monthlyExpenses.toFixed(2) + ' €';
-            remainingBudgetDisplay.textContent = remainingBudget.toFixed(2) + ' €';
-        }
-
-        // Fonction pour afficher une section et mettre à jour la navigation
-        function showSection(sectionId) {
-            navIcons.forEach(icon => icon.classList.remove('active'));
-            sections.forEach(section => section.classList.remove('active'));
-            const section = document.getElementById(sectionId);
-            const navIcon = document.querySelector(`.nav-icon[data-section="${sectionId}"]`);
-            if (section && navIcon) {
-                section.classList.add('active');
-                navIcon.classList.add('active');
-            }
-             // Cacher le message de bienvenue quand une section est affichée
-            if (welcomeMessage) {
-                welcomeMessage.style.display = 'none';
-            }
-        }
-
-        // Gestionnaire d'événement pour la navigation
-        navIcons.forEach(icon => {
-            icon.addEventListener('click', () => {
-                const sectionId = icon.getAttribute('data-section');
-                showSection(sectionId);
+        buttons.forEach(button => {
+            button.addEventListener("click", () => {
+                const targetId = button.dataset.target;
+                featurePages.forEach(page => page.classList.remove("active"));
+                document.getElementById(targetId).classList.add("active");
+                modal.style.display = "block";
             });
         });
 
-        // Gestionnaire d'événement pour le bouton "Ajouter une tâche"
-        addTodoButton.addEventListener('click', () => {
-            addTodoModal.style.display = 'flex';
-            todoInput.value = '';
-            saveTodoButton.disabled = true;
+        modalClose.addEventListener("click", () => {
+            modal.style.display = "none";
+            featurePages.forEach(page => page.classList.remove("active"));
         });
 
-        // Gestionnaire d'événement pour le bouton "Fermer" de la boîte de dialogue modale
-        closeModalButton.addEventListener('click', () => {
-            addTodoModal.style.display = 'none';
-        });
-
-        // Gestionnaire d'événement pour la saisie dans l'input de la tâche
-        todoInput.addEventListener('input', () => {
-            saveTodoButton.disabled = !todoInput.value.trim();
-        });
-
-        // Gestionnaire d'événement pour le bouton "Enregistrer" de la boîte de dialogue modale
-        saveTodoButton.addEventListener('click', () => {
-            const todoText = todoInput.value.trim();
-            if (todoText) {
-                const newTodoItem = document.createElement('li');
-                newTodoItem.textContent = todoText;
-                todoList.appendChild(newTodoItem);
-                addTodoModal.style.display = 'none';
+        window.addEventListener("click", (event) => {
+            if (event.target === modal) {
+                modal.style.display = "none";
+                featurePages.forEach(page => page.classList.remove("active"));
             }
         });
 
-        // Gestionnaire d'événement pour le bouton "Mettre à jour le budget"
-        updateBudgetButton.addEventListener('click', () => {
-            const newIncome = parseFloat(incomeInput.value);
-            const newExpenses = parseFloat(expensesInput.value);
+        // Calculatrice
+        let displayValue = '0';
+        const calculatorDisplay = document.getElementById('calc-display');
 
-            if (!isNaN(newIncome) && !isNaN(newExpenses)) {
-                monthlyIncome = newIncome;
-                monthlyExpenses = newExpenses;
-                remainingBudget = monthlyIncome - monthlyExpenses;
-                updateBudgetDisplay();
-                alert('Budget mis à jour avec succès !');
+        function updateDisplay() {
+            calculatorDisplay.value = displayValue;
+        }
+
+        function calculate(value) {
+            if (value === 'C') {
+                displayValue = '0';
+            } else if (value === '=') {
+                try {
+                    displayValue = eval(displayValue).toString();
+                } catch (error) {
+                    displayValue = 'Error';
+                }
+            } else if (displayValue === '0' || displayValue === 'Error') {
+                displayValue = value;
             } else {
-                alert('Veuillez entrer des valeurs numériques valides pour les revenus et les dépenses.');
+                displayValue += value;
             }
+            updateDisplay();
+        }
+
+        function clearDisplay() {
+            displayValue = '0';
+            updateDisplay();
+        }
+
+        // Liste de Tâches
+        const todoInput = document.getElementById('todo-input');
+        const todoList = document.getElementById('todo-list');
+
+        function addTodo() {
+            const task = todoInput.value;
+            if (task.trim() !== "") {
+                const li = document.createElement('li');
+                li.className = "bg-gray-100 p-2 rounded-md flex justify-between items-center";
+                li.textContent = task;
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = "Supprimer";
+                deleteButton.className = "bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded text-sm";
+                deleteButton.onclick = () => li.remove();
+                li.appendChild(deleteButton);
+                todoList.appendChild(li);
+                todoInput.value = "";
+            }
+        }
+
+        // Chronomètre
+        let timerInterval;
+        let time = 0;
+        const timerDisplay = document.getElementById('timer-display');
+        let isPaused = false;
+
+        function startTimer() {
+            if (isPaused) {
+                timerInterval = setInterval(updateTimer, 1000);
+                isPaused = false;
+            } else if (!timerInterval) {
+                timerInterval = setInterval(updateTimer, 1000);
+            }
+        }
+
+        function pauseTimer() {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            isPaused = true;
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            time = 0;
+            updateTimerDisplay();
+            isPaused = false;
+        }
+
+        function updateTimer() {
+            time++;
+            updateTimerDisplay();
+        }
+
+        function updateTimerDisplay() {
+            const hours = Math.floor(time / 3600);
+            const minutes = Math.floor((time % 3600) / 60);
+            const seconds = time % 60;
+            timerDisplay.textContent = `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+        }
+
+        function pad(number) {
+            return (number < 10 ? '0' : '') + number;
+        }
+
+        // Convertisseur d'Unités
+        function convertUnits() {
+            const fromUnit = document.getElementById('from-unit').value;
+            const toUnit = document.getElementById('to-unit').value;
+            const value = parseFloat(document.getElementById('unit-input').value);
+            let result;
+
+            if (isNaN(value)) {
+                result = "Veuillez entrer une valeur valide.";
+            } else if (fromUnit === toUnit) {
+                result = value + " " + fromUnit;
+            } else {
+                switch (fromUnit) {
+                    case 'celsius':
+                        if (toUnit === 'fahrenheit') {
+                            result = (value * 9/5) + 32;
+                        }
+                        break;
+                    case 'fahrenheit':
+                        if (toUnit === 'celsius') {
+                            result = (value - 32) * 5/9;
+                        }
+                        break;
+                    case 'meters':
+                        if (toUnit === 'feet') {
+                            result = value * 3.28084;
+                        }
+                        break;
+                    case 'feet':
+                        if (toUnit === 'meters') {
+                            result = value / 3.28084;
+                        }
+                        break;
+                }
+                result = result.toFixed(2) + " " + toUnit;
+            }
+            document.getElementById('unit-output').textContent = "Résultat: " + result;
+        }
+
+        // Calendrier
+        const calendarEl = document.getElementById('calendar');
+        const today = new Date();
+        let currentMonth = today.getMonth();
+        let currentYear = today.getFullYear();
+
+        function renderCalendar() {
+            calendarEl.innerHTML = '';
+            const monthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
+            const calendarTable = document.createElement('table');
+            calendarTable.className = "w-full border-collapse border border-gray-200";
+            const header = calendarTable.insertRow();
+            const headerCell = header.insertCell();
+            headerCell.colSpan = 7;
+            headerCell.className = "text-center py-2 font-semibold text-gray-800 text-lg";
+            headerCell.textContent = monthNames[currentMonth] + " " + currentYear;
+
+            const days = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
+            const dayHeader = calendarTable.insertRow();
+            for (let i = 0; i < 7; i++) {
+                const dayCell = dayHeader.insertCell();
+                dayCell.textContent = days[i];
+                dayCell.className = "text-center py-1 font-medium text-gray-600 border-b border-gray-200";
+            }
+
+            let dayCounter = 1;
+            for (let i = 0; i < 6; i++) {
+                const row = calendarTable.insertRow();
+                for (let j = 0; j < 7; j++) {
+                    const cell = row.insertCell();
+                    if (i === 0 && j < firstDayOfMonth) {
+                        cell.textContent = '';
+                    } else if (dayCounter > daysInMonth) {
+                        break;
+                    } else {
+                        cell.textContent = dayCounter;
+                        cell.className = "text-center py-2 border-r border-gray-200";
+                        if (j < 6) {
+                           cell.classList.add("border-b");
+                        }
+                        if (dayCounter === today.getDate() && currentMonth === today.getMonth() && currentYear === today.getFullYear()) {
+                            cell.classList.add('bg-blue-100', 'font-semibold');
+                        }
+                        dayCounter++;
+                    }
+                }
+                if (dayCounter > daysInMonth) {
+                    break;
+                }
+            }
+            calendarEl.appendChild(calendarTable);
+
+            const navigation = document.createElement('div');
+            navigation.className = "flex justify-center space-x-4 mt-4";
+            const prevButton = document.createElement('button');
+            prevButton.textContent = "❮";
+            prevButton.className = "bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded";
+            prevButton.onclick = () => {
+                currentMonth--;
+                if (currentMonth < 0) {
+                    currentMonth = 11;
+                    currentYear--;
+                }
+                renderCalendar();
+            };
+            const nextButton = document.createElement('button');
+            nextButton.textContent = "❯";
+            nextButton.className = "bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded";
+            nextButton.onclick = () => {
+                currentMonth++;
+                if (currentMonth > 11) {
+                    currentMonth = 0;
+                    currentYear++;
+                }
+                renderCalendar();
+            };
+            navigation.appendChild(prevButton);
+            navigation.appendChild(nextButton);
+            calendarEl.appendChild(navigation);
+        }
+        renderCalendar();
+
+        // Gestionnaire de Contacts
+        const contactNameInput = document.getElementById('contact-name-input');
+        const contactPhoneInput = document.getElementById('contact-phone-input');
+        const contactEmailInput = document.getElementById('contact-email-input');
+        const contactList = document.getElementById('contact-list');
+
+        function addContact() {
+            const name = contactNameInput.value;
+            const phone = contactPhoneInput.value;
+            const email = contactEmailInput.value;
+            if (name.trim() !== "" && phone.trim() !== "") {
+                const li = document.createElement('li');
+                li.className = "bg-gray-100 p-2 rounded-md flex justify-between items-center";
+                const contactInfo = document.createElement('div');
+                contactInfo.innerHTML = `<p class="font-semibold">${name}</p><p class="text-sm text-gray-600">${phone}</p><p class="text-sm text-gray-600">${email}</p>`;
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = "Supprimer";
+                deleteButton.className = "bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded text-sm";
+                deleteButton.onclick = () => li.remove();
+                li.appendChild(contactInfo);
+                li.appendChild(deleteButton);
+                contactList.appendChild(li);
+                contactNameInput.value = "";
+                contactPhoneInput.value = "";
+                contactEmailInput.value = "";
+            }
+        }
+
+        // Bloc-notes
+        const noteInput = document.getElementById('note-input');
+        const noteSavedMessage = document.getElementById('note-saved-message');
+
+        function saveNote() {
+            const note = noteInput.value;
+            localStorage.setItem('myNote', note);
+            noteSavedMessage.textContent = "Note sauvegardée !";
+            setTimeout(() => {
+                noteSavedMessage.textContent = "";
+            }, 3000);
+        }
+
+        window.onload = () => {
+            const savedNote = localStorage.getItem('myNote');
+            if (savedNote) {
+                noteInput.value = savedNote;
+            }
+        };
+
+        // Suivi de l'Hydratation
+        const waterAmountInput = document.getElementById('water-amount');
+        const hydrationLevel = document.getElementById('hydration-level');
+        const hydrationText = document.getElementById('hydration-text');
+        const totalWaterGoal = 3000;
+        let currentWaterAmount = 0;
+
+        function addWater() {
+            const amount = parseInt(waterAmountInput.value);
+            if (!isNaN(amount) && amount > 0) {
+                currentWaterAmount += amount;
+                if (currentWaterAmount > totalWaterGoal) {
+                    currentWaterAmount = totalWaterGoal;
+                }
+                const percentage = (currentWaterAmount / totalWaterGoal) * 100;
+                hydrationLevel.style.width = percentage + "%";
+                hydrationLevel.setAttribute('aria-valuenow', currentWaterAmount);
+                hydrationText.textContent = currentWaterAmount + "ml sur " + totalWaterGoal + "ml";
+                waterAmountInput.value = 250;
+            }
+        }
+
+        function resetHydration() {
+            currentWaterAmount = 0;
+            hydrationLevel.style.width = "0%";
+            hydrationLevel.setAttribute('aria-valuenow', 0);
+            hydrationText.textContent = "0ml sur " + totalWaterGoal + "ml";
+        }
+
+        // Calculateur d'IMC
+        const heightInput = document.getElementById('height-input');
+        const weightInput = document.getElementById('weight-input');
+        const bmiResult = document.getElementById('bmi-result');
+        const bmiCategory = document.getElementById('bmi-category');
+
+        function calculateBMI() {
+            const height = parseFloat(heightInput.value) / 100;
+            const weight = parseFloat(weightInput.value);
+            if (isNaN(height) || isNaN(weight) || height <= 0 || weight <= 0) {
+                bmiResult.textContent = "IMC: Veuillez entrer des valeurs valides.";
+                bmiCategory.textContent = "";
+            } else {
+                const bmi = weight / (height * height);
+                bmiResult.textContent = "IMC: " + bmi.toFixed(2);
+                let category = "";
+                if (bmi < 18.5) {
+                    category = "Insuffisance pondérale";
+                } else if (bmi < 24.9) {
+                    category = "Poids normal";
+                } else if (bmi < 29.9) {
+                    category = "Surpoids";
+                } else {
+                    category = "Obésité";
+                }
+                bmiCategory.textContent = "Catégorie: " + category;
+            }
+        }
+
+        // Minuteur de Pomodoro
+        let pomodoroInterval;
+        let pomodoroTime = 25 * 60;
+        let isPomodoroPaused = false;
+        let isBreakTime = false;
+        const pomodoroDisplay = document.getElementById('pomodoro-display');
+        const pomodoroMessage = document.getElementById('pomodoro-message');
+
+        function startPomodoro() {
+          if (isPomodoroPaused) {
+            pomodoroInterval = setInterval(updatePomodoro, 1000);
+            isPomodoroPaused = false;
+          } else if (!pomodoroInterval) {
+            pomodoroInterval = setInterval(updatePomodoro, 1000);
+          }
+        }
+
+        function pausePomodoro() {
+            clearInterval(pomodoroInterval);
+            pomodoroInterval = null;
+            isPomodoroPaused = true;
+        }
+
+        function resetPomodoro() {
+            clearInterval(pomodoroInterval);
+            pomodoroInterval = null;
+            pomodoroTime = 25 * 60;
+            isBreakTime = false;
+            updatePomodoroDisplay();
+            isPomodoroPaused = false;
+            pomodoroMessage.textContent = "";
+        }
+
+        function updatePomodoro() {
+            if (pomodoroTime > 0) {
+                pomodoroTime--;
+                updatePomodoroDisplay();
+            } else {
+                clearInterval(pomodoroInterval);
+                pomodoroInterval = null;
+                if (!isBreakTime) {
+                    pomodoroTime = 5 * 60;
+                    isBreakTime = true;
+                    pomodoroMessage.textContent = "Temps de pause !";
+                } else {
+                    pomodoroTime = 25 * 60;
+                    isBreakTime = false;
+                    pomodoroMessage.textContent = "Retour au travail !";
+                }
+                startPomodoro();
+            }
+        }
+
+        function updatePomodoroDisplay() {
+            const minutes = Math.floor(pomodoroTime / 60);
+            const seconds = pomodoroTime % 60;
+            pomodoroDisplay.textContent = `${pad(minutes)}:${pad(seconds)}`;
+        }
+
+        // Jeu de Devinettes
+        const guessInput = document.getElementById('guess-input');
+        const guessMessage = document.getElementById('guess-message');
+        let secretNumber = Math.floor(Math.random() * 100) + 1;
+        let attempts = 0;
+
+        function checkGuess() {
+            const guess = parseInt(guessInput.value);
+            attempts++;
+            if (isNaN(guess) || guess < 1 || guess > 100) {
+                guessMessage.textContent = "Veuillez entrer un nombre valide entre 1 et 100.";
+            } else if (guess === secretNumber) {
+                guessMessage.textContent = `Bravo ! Vous avez deviné le nombre en ${attempts} tentatives. Le nombre était ${secretNumber}.`;
+                secretNumber = Math.floor(Math.random() * 100) + 1;
+                attempts = 0;
+            } else {
+                guessMessage.textContent = guess < secretNumber ? "Trop petit ! Essayez encore." : "Trop grand ! Essayez encore.";
+            }
+            guessInput.value = "";
+            guessInput.focus();
+        }
+
+        // Générateur de Citations
+        const quoteText = document.getElementById('quote-text');
+        const quoteAuthor = document.getElementById('quote-author');
+        const quotes = [
+            { text: "La vie est 10% ce qui vous arrive et 90% comment vous réagissez.", author: "Charles R. Swindoll" },
+            { text: "Le seul moyen de faire du bon travail est d'aimer ce que vous faites.", author: "Steve Jobs" },
+            { text: "La folie, c'est de faire toujours la même chose et de s'attendre à un résultat différent.", author: "Albert Einstein" },
+            { text: "N'abandonnez jamais. Il y a toujours une chance de réussir.", author: "Jim Valvano" },
+            { text: "La meilleure façon de prédire l'avenir est de le créer.", author: "Peter Drucker" },
+        ];
+
+        function generateQuote() {
+            const randomIndex = Math.floor(Math.random() * quotes.length);
+            quoteText.textContent = `“${quotes[randomIndex].text}”`;
+            quoteAuthor.textContent = "- " + quotes[randomIndex].author;
+        }
+        generateQuote();
+
+        // Lecteur de Musique
+        const audioFile = document.getElementById('audio-file');
+        const musicPlayer = document.getElementById('music-player');
+        let currentAudio;
+
+        audioFile.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            const url = URL.createObjectURL(file);
+            musicPlayer.src = url;
+            currentAudio = url;
         });
 
-        // Fonction pour enregistrer l'état de l'application
-        function saveAppState() {
-            localStorage.setItem('monthlyIncome', monthlyIncome.toString());
-            localStorage.setItem('monthlyExpenses', monthlyExpenses.toString());
-            localStorage.setItem('remainingBudget', remainingBudget.toString());
-            const todos = Array.from(todoList.children).map(item => item.textContent);
-            localStorage.setItem('todos', JSON.stringify(todos));
-        }
-
-        // Fonction pour charger l'état de l'application
-        function loadAppState() {
-            const savedIncome = localStorage.getItem('monthlyIncome');
-            const savedExpenses = localStorage.getItem('monthlyExpenses');
-            const savedBudget = localStorage.getItem('remainingBudget');
-            const savedTodos = localStorage.getItem('todos');
-
-            if (savedIncome) {
-                monthlyIncome = parseFloat(savedIncome);
-            }
-            if (savedExpenses) {
-                monthlyExpenses = parseFloat(savedExpenses);
-            }
-            if (savedBudget) {
-                remainingBudget = parseFloat(savedBudget);
-            }
-            if (savedTodos) {
-                const todos = JSON.parse(savedTodos);
-                todos.forEach(todoText => {
-                    const newTodoItem = document.createElement('li');
-                    newTodoItem.textContent = todoText;
-                    todoList.appendChild(newTodoItem);
-                });
+        function playMusic() {
+            if (currentAudio) {
+                musicPlayer.play();
             }
         }
 
-        // Initialisation de l'application
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/service-worker.js')
-                .then(registration => {
-                    console.log('Service Worker enregistré avec succès :', registration);
-                })
-                .catch(error => {
-                    console.error('Erreur lors de l\'enregistrement du Service Worker :', error);
-                });
+        function pauseMusic() {
+            if (currentAudio) {
+                musicPlayer.pause();
+            }
         }
 
-        loadAppState();
-        updateBudgetDisplay();
-        showSection('budget'); // Afficher la section budget par défaut au démarrage
+        function stopMusic() {
+            if (currentAudio) {
+                musicPlayer.pause();
+                musicPlayer.currentTime = 0;
+            }
+        }
 
-        // Enregistrer l'état de l'application avant la fermeture
-        window.addEventListener('beforeunload', () => {
-            saveAppState();
-        });
-    </script>
-</body>
-</html>
+        // Météo
+        const weatherLocationInput = document.getElementById('weather-location');
+        const weatherInfo = document.getElementById('weather-info');
+        const apiKey = 'YOUR_API_KEY'; // Remplacez par votre clé API OpenWeatherMap
+
+        function getWeather() {
+            const location = weatherLocationInput.value;
+            if (location.trim() !== "") {
+                const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${apiKey}&units=metric&lang=fr`;
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.cod === 200) {
+                            weatherInfo.innerHTML = `
+                                <h3 class="text-xl font-semibold text-gray-800">${data.name}, ${data.sys.country}</h3>
+                                <p class="text-gray-600">Température: ${data.main.temp}°C</p>
+                                <p class="text-gray-600">Description: ${data.weather[0].description}</p>
+                                <p class="text-gray-600">Humidité: ${data.main.humidity}%<
